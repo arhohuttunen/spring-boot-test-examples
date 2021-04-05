@@ -1,14 +1,13 @@
 package com.arhohuttunen;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class OrderService {
-    @Autowired
-    private OrderRepository orderRepository;
-    @Autowired
-    private PaymentRepository paymentRepository;
+    private final OrderRepository orderRepository;
+    private final PaymentRepository paymentRepository;
 
     public void pay(Long orderId, String creditCardNumber) {
         Order order = orderRepository.findById(orderId).orElseThrow(PaymentException::new);

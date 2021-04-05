@@ -1,35 +1,41 @@
 package com.arhohuttunen;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 class OrderServiceTests {
-    @Autowired
+    @Mock
     private OrderRepository orderRepository;
-    @Autowired
+    @Mock
+    private PaymentRepository paymentRepository;
+    @InjectMocks
     private OrderService orderService;
 
     @Test
     void payOrder() {
         Order order = new Order(1L, false);
-        orderRepository.save(order);
+        when(orderRepository.findById(1L)).thenReturn(Optional.of(order));
 
         orderService.pay(1L, "4532 7562 7962 4064");
 
-        Order savedOrder = orderRepository.findById(1L).get();
-        assertThat(savedOrder.getPaid()).isTrue();
+        assertThat(order.getPaid()).isTrue();
     }
 
     @Test
     void cannotPayAlreadyPaidOrder() {
-        Order order = new Order(2L, true);
-        orderRepository.save(order);
+        Order order = new Order(1L, true);
+        when(orderRepository.findById(1L)).thenReturn(Optional.of(order));
 
-        assertThrows(PaymentException.class, () -> orderService.pay(2L, "4556 6225 7726 8643"));
+        assertThrows(PaymentException.class, () -> orderService.pay(order.getId(), "4556 6225 7726 8643"));
     }
 }
