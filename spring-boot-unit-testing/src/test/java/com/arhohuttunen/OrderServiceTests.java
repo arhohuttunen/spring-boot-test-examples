@@ -26,7 +26,7 @@ class OrderServiceTests {
         Order order = new Order(1L, false);
         when(orderRepository.findById(1L)).thenReturn(Optional.of(order));
 
-        orderService.pay(1L, "4532 7562 7962 4064");
+        orderService.pay(1L, "4532756279624064");
 
         assertThat(order.getPaid()).isTrue();
     }
@@ -36,6 +36,6 @@ class OrderServiceTests {
         Order order = new Order(1L, true);
         when(orderRepository.findById(1L)).thenReturn(Optional.of(order));
 
-        assertThrows(PaymentException.class, () -> orderService.pay(order.getId(), "4556 6225 7726 8643"));
+        assertThrows(PaymentException.class, () -> orderService.pay(order.getId(), "4556622577268643"));
     }
 }
