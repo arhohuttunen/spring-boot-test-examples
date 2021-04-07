@@ -8,13 +8,13 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
@@ -67,10 +67,12 @@ class OrderControllerTests {
 
     @Test
     void getReceiptForOrder() throws Exception {
-        Order order = new Order(1L, LocalDateTime.now(), 100.0, false);
-        Payment payment = new Payment(1000L, order, "4532756279624064");
+        Receipt receipt = new Receipt(
+                LocalDateTime.now(),
+                "4532756279624064",
+                100.0);
 
-        givenOrderIsPaid(payment);
+        givenOrderIsPaid(1L, receipt);
 
         mockMvc.perform(get("/order/{id}/receipt", 1L))
                 .andExpect(jsonPath("$.date").isNotEmpty())
@@ -79,20 +81,26 @@ class OrderControllerTests {
     }
 
     private void givenPaymentSucceeds(Long orderId) {
-        doNothing().when(orderService).pay(eq(orderId), any());
+        Order order = new Order(orderId, LocalDateTime.now(), 100.0, false);
+        Payment payment = new Payment(1000L, order, "4532756279624064");
+
+        when(orderService.pay(eq(orderId), any())).thenReturn(payment);
+    }
+
+    private void givenOrderDoesNotExist(Long orderId) {
+        when(orderService.pay(eq(orderId), any())).thenThrow(EntityNotFoundException.class);
     }
 
     private void givenPaymentWithIdAlreadyExists(Long orderId) {
-        doThrow(OrderAlreadyPaid.class).when(orderService).pay(eq(orderId), any());
+        when(orderService.pay(eq(orderId), any())).thenThrow(OrderAlreadyPaid.class);
     }
 
     private void givenOrderIsPaid(Long orderId) {
-        Order order = new Order(orderId, LocalDateTime.now(), 100.0, false);
-        Payment payment = new Payment(1000L, order, "4532756279624064");
-        givenOrderIsPaid(payment);
+        Receipt receipt = new Receipt(LocalDateTime.now(), "4532756279624064", 100.0);
+        givenOrderIsPaid(orderId, receipt);
     }
 
-    private void givenOrderIsPaid(Payment payment) {
-        doReturn(payment).when(orderService).getPayment(eq(payment.getOrder().getId()));
+    private void givenOrderIsPaid(Long orderId, Receipt receipt) {
+        doReturn(receipt).when(orderService).getReceipt(eq(orderId));
     }
 }

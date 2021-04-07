@@ -11,7 +11,7 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final PaymentRepository paymentRepository;
 
-    public void pay(Long orderId, String creditCardNumber) {
+    public Payment pay(Long orderId, String creditCardNumber) {
         Order order = orderRepository.findById(orderId).orElseThrow(EntityNotFoundException::new);
 
         if (order.isPaid()) {
@@ -19,10 +19,11 @@ public class OrderService {
         }
 
         orderRepository.save(order.markPaid());
-        paymentRepository.save(new Payment(order, creditCardNumber));
+        return paymentRepository.save(new Payment(order, creditCardNumber));
     }
 
-    public Payment getPayment(Long orderId) {
-        return paymentRepository.findByOrderId(orderId).orElseThrow(EntityNotFoundException::new);
+    public Receipt getReceipt(Long orderId) {
+        Payment payment = paymentRepository.findByOrderId(orderId).orElseThrow(EntityNotFoundException::new);
+        return new Receipt(payment.getOrder().getDate(), payment.getCreditCardNumber(), payment.getOrder().getAmount());
     }
 }
