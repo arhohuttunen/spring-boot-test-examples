@@ -1,4 +1,5 @@
 rootProject.name = 'spring-boot-test-examples'
-include 'spring-boot-unit-testing'
-include 'spring-boot-webmvctest' 
 include 'spring-boot-datajpatest'
+include 'spring-boot-jsontest'
+include 'spring-boot-unit-testing'
+include 'spring-boot-webmvctest'
