@@ -1,0 +1,3 @@
+rootProject.name = 'spring-boot-test-examples'
+include 'spring-boot-unit-testing'
+include 'spring-boot-webmvctest' 
