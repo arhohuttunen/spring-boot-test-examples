@@ -1,11 +1,15 @@
 package com.arhohuttunen;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -33,5 +37,12 @@ public class OrderController {
     public ResponseEntity<Receipt> getReceipt(@PathVariable("id") Long orderId) {
         Receipt receipt = orderService.getReceipt(orderId);
         return ResponseEntity.ok().body(receipt);
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
+    @ResponseBody
+    public String handleOrderAlreadyPaid(OrderAlreadyPaid orderAlreadyPaid) {
+        return orderAlreadyPaid.getMessage();
     }
 }

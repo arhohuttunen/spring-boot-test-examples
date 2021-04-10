@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -30,7 +29,10 @@ class OrderControllerTests {
 
     @Test
     void payOrder() throws Exception {
-        givenPaymentSucceeds(1L);
+        Order order = new Order(1L, LocalDateTime.now(), 100.0, false);
+        Payment payment = new Payment(1000L, order, "4532756279624064");
+
+        when(orderService.pay(eq(1L), eq("4532756279624064"))).thenReturn(payment);
 
         mockMvc.perform(post("/order/{id}/payment", 1L)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -41,7 +43,7 @@ class OrderControllerTests {
 
     @Test
     void paymentFailsWhenOrderIsNotFound() throws Exception {
-        givenOrderDoesNotExist(1L);
+        when(orderService.pay(eq(1L), any())).thenThrow(EntityNotFoundException.class);
 
         mockMvc.perform(post("/order/{id}/payment", 1L)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -59,7 +61,7 @@ class OrderControllerTests {
 
     @Test
     void cannotPayAlreadyPaidOrder() throws Exception {
-        givenPaymentWithIdAlreadyExists(1L);
+        when(orderService.pay(eq(1L), any())).thenThrow(OrderAlreadyPaid.class);
 
         mockMvc.perform(post("/order/{id}/payment", 1L)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -69,7 +71,9 @@ class OrderControllerTests {
 
     @Test
     void receiptCanBeFound() throws Exception {
-        givenOrderIsPaid(1L);
+        Receipt receipt = new Receipt(LocalDateTime.now(), "4532756279624064", 100.0);
+
+        when(orderService.getReceipt(eq(1L))).thenReturn(receipt);
 
         mockMvc.perform(get("/order/{id}/receipt", 1L))
                 .andExpect(status().isOk());
@@ -82,35 +86,11 @@ class OrderControllerTests {
                 "4532756279624064",
                 100.0);
 
-        givenOrderIsPaid(1L, receipt);
+        when(orderService.getReceipt(eq(1L))).thenReturn(receipt);
 
         mockMvc.perform(get("/order/{id}/receipt", 1L))
                 .andExpect(jsonPath("$.date").isNotEmpty())
                 .andExpect(jsonPath("$.creditCardNumber").value("4532756279624064"))
                 .andExpect(jsonPath("$.amount").value(100.0));
-    }
-
-    private void givenPaymentSucceeds(Long orderId) {
-        Order order = new Order(orderId, LocalDateTime.now(), 100.0, false);
-        Payment payment = new Payment(1000L, order, "4532756279624064");
-
-        when(orderService.pay(eq(orderId), any())).thenReturn(payment);
-    }
-
-    private void givenOrderDoesNotExist(Long orderId) {
-        when(orderService.pay(eq(orderId), any())).thenThrow(EntityNotFoundException.class);
-    }
-
-    private void givenPaymentWithIdAlreadyExists(Long orderId) {
-        when(orderService.pay(eq(orderId), any())).thenThrow(OrderAlreadyPaid.class);
-    }
-
-    private void givenOrderIsPaid(Long orderId) {
-        Receipt receipt = new Receipt(LocalDateTime.now(), "4532756279624064", 100.0);
-        givenOrderIsPaid(orderId, receipt);
-    }
-
-    private void givenOrderIsPaid(Long orderId, Receipt receipt) {
-        doReturn(receipt).when(orderService).getReceipt(eq(orderId));
     }
 }
