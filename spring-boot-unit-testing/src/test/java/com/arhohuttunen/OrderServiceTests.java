@@ -10,6 +10,8 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.AdditionalAnswers.returnsFirstArg;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -25,10 +27,12 @@ class OrderServiceTests {
     void payOrder() {
         Order order = new Order(1L, false);
         when(orderRepository.findById(1L)).thenReturn(Optional.of(order));
+        when(paymentRepository.save(any())).then(returnsFirstArg());
 
-        orderService.pay(1L, "4532756279624064");
+        Payment payment = orderService.pay(1L, "4532756279624064");
 
-        assertThat(order.getPaid()).isTrue();
+        assertThat(payment.getOrder().isPaid()).isTrue();
+        assertThat(payment.getCreditCardNumber()).isEqualTo("4532756279624064");
     }
 
     @Test
