@@ -10,7 +10,7 @@ CREATE TABLE orders(
 
 CREATE TABLE payment(
     id INT NOT NULL PRIMARY KEY,
-    order_id INT NOT NULL,
+    order_id INT NOT NULL UNIQUE,
     credit_card_number VARCHAR(16) NOT NULL,
     CONSTRAINT fk_order FOREIGN KEY(order_id) REFERENCES orders(id)
 );

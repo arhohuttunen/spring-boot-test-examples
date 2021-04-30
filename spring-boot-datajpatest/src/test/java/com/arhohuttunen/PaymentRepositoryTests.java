@@ -8,12 +8,14 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 
+import javax.persistence.PersistenceException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -38,6 +40,18 @@ class PaymentRepositoryTests {
 
         assertThat(savedPayment).isPresent();
         assertThat(savedPayment.get().getOrder().getPaid()).isTrue();
+    }
+
+    @Test
+    void paymentsAreUniquePerOrder() {
+        Order order = new Order(LocalDateTime.now(), BigDecimal.valueOf(100.0), true);
+        Payment first = new Payment(order, "4532756279624064");
+        Payment second = new Payment(order, "4716327217780406");
+
+        entityManager.persist(order);
+        entityManager.persist(first);
+
+        assertThrows(PersistenceException.class, () -> entityManager.persistAndFlush(second));
     }
 
     @Test
