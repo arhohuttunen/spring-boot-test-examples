@@ -1,3 +1,5 @@
 spring:
   datasource:
-    url: jdbc:postgresql:///localhost:5432/payment
+    url: jdbc:postgresql://localhost:5432/payment
+    username: payment
+    password: supersecret
