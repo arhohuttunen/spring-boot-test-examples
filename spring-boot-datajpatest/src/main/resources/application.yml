@@ -3,3 +3,6 @@ spring:
     url: jdbc:postgresql://localhost:5432/payment
     username: payment
     password: supersecret
+  jpa:
+    hibernate:
+      ddl-auto: validate
