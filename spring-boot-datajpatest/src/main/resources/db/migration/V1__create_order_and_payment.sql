@@ -4,7 +4,7 @@ CREATE SEQUENCE hibernate_sequence
 CREATE TABLE orders(
     id BIGINT NOT NULL PRIMARY KEY,
     date TIMESTAMP NOT NULL,
-    amount NUMERIC NOT NULL,
+    amount DECIMAL NOT NULL,
     paid BOOLEAN NOT NULL
 );
 
