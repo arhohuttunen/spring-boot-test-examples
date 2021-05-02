@@ -34,7 +34,8 @@ class PaymentRepositoryTests {
         Payment payment = new Payment(order, "4532756279624064");
 
         Long orderId = entityManager.persist(order).getId();
-        entityManager.persist(payment);
+        entityManager.persistAndFlush(payment);
+        entityManager.clear();
 
         Optional<Payment> savedPayment = paymentRepository.findByOrderId(orderId);
 
@@ -60,7 +61,8 @@ class PaymentRepositoryTests {
         Payment payment = new Payment(order, "4532756279624064");
 
         Long orderId = entityManager.persist(order).getId();
-        entityManager.persist(payment);
+        entityManager.persistAndFlush(payment);
+        entityManager.clear();
 
         List<Payment> payments = paymentRepository.findAllAfter(LocalDateTime.now().minusSeconds(1));
 
