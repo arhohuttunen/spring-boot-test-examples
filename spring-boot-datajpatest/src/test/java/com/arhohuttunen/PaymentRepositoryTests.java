@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @TestPropertySource(properties = {
-        "spring.datasource.url=jdbc:tc:postgresql:13.2-alpine:///payment"
+        "spring.datasource.url=jdbc:tc:postgresql:13.2-alpine://payment"
 })
 class PaymentRepositoryTests {
     @Autowired
@@ -34,8 +34,7 @@ class PaymentRepositoryTests {
         Payment payment = new Payment(order, "4532756279624064");
 
         Long orderId = entityManager.persist(order).getId();
-        entityManager.persistAndFlush(payment);
-        entityManager.clear();
+        entityManager.persist(payment);
 
         Optional<Payment> savedPayment = paymentRepository.findByOrderId(orderId);
 
@@ -56,17 +55,11 @@ class PaymentRepositoryTests {
     }
 
     @Test
+    @Sql("/multiple-payments.sql")
     void findPaymentsAfterDate() {
-        Order order = new Order(LocalDateTime.now(), BigDecimal.valueOf(100.0), true);
-        Payment payment = new Payment(order, "4532756279624064");
+        List<Payment> payments = paymentRepository.findAllAfter(LocalDateTime.now().minusDays(1));
 
-        Long orderId = entityManager.persist(order).getId();
-        entityManager.persistAndFlush(payment);
-        entityManager.clear();
-
-        List<Payment> payments = paymentRepository.findAllAfter(LocalDateTime.now().minusSeconds(1));
-
-        assertThat(payments).extracting("order.id").containsOnly(orderId);
+        assertThat(payments).extracting("order.id").containsOnly(1L);
     }
 
     @Test
