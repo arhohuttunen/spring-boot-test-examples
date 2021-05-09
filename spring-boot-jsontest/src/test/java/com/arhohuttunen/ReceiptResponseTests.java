@@ -21,14 +21,25 @@ class ReceiptResponseTests {
     @Test
     void serializeInCorrectFormat() throws IOException {
         ReceiptResponse receipt = new ReceiptResponse(
+                LocalDateTime.of(2021, 5, 9, 16, 0),
+                "4532756279624064",
+                Money.of(50.0, Monetary.getCurrency("USD")));
+
+        JsonContent<ReceiptResponse> json = jacksonTester.write(receipt);
+
+        assertThat(json).extractingJsonPathStringValue("$.date").isEqualTo("09.05.2021 16:00");
+        assertThat(json).extractingJsonPathStringValue("$.amount").isEqualTo("USD50.00");
+    }
+
+    @Test
+    void serializeCorrectJson() throws IOException {
+        ReceiptResponse receipt = new ReceiptResponse(
                 LocalDateTime.of(2021, 3, 30, 17, 5),
                 "4532756279624064",
                 Money.of(100.0, Monetary.getCurrency("EUR")));
 
         JsonContent<ReceiptResponse> json = jacksonTester.write(receipt);
 
-        assertThat(json).extractingJsonPathStringValue("$.date").isEqualTo("30.03.2021 17:05");
-        assertThat(json).extractingJsonPathStringValue("$.creditCardNumber").isEqualTo("4532756279624064");
-        assertThat(json).extractingJsonPathStringValue("$.amount").isEqualTo("EUR100.00");
+        assertThat(json).isEqualToJson("receipt.json");
     }
 }
