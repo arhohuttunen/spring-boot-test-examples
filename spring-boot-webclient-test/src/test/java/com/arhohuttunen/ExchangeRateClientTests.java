@@ -9,6 +9,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import javax.money.CurrencyUnit;
 import javax.money.Monetary;
 import java.math.BigDecimal;
 
@@ -40,9 +41,12 @@ class ExchangeRateClientTests {
                         .setBody(json)
         );
 
-        BigDecimal rate = exchangeRateClient.getExchangeRate(Monetary.getCurrency("EUR"), Monetary.getCurrency("GBP"));
+        CurrencyUnit eur = Monetary.getCurrency("EUR");
+        CurrencyUnit usd = Monetary.getCurrency("USD");
 
-        assertThat(rate.toString()).isEqualTo("0.8412");
+        BigDecimal rate = exchangeRateClient.getExchangeRate(eur, usd);
+
+        assertThat(rate.doubleValue()).isEqualTo(0.8412);
     }
 
     @Test
@@ -72,9 +76,11 @@ class ExchangeRateClientTests {
                         .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                         .setBody(json)
         );
+        CurrencyUnit eur = Monetary.getCurrency("EUR");
+        CurrencyUnit gbp = Monetary.getCurrency("GBP");
 
         assertThrows(ExchangeFailure.class, () ->
-                exchangeRateClient.getExchangeRate(Monetary.getCurrency("EUR"), Monetary.getCurrency("GBP"))
+                exchangeRateClient.getExchangeRate(eur, gbp)
         );
     }
 }
