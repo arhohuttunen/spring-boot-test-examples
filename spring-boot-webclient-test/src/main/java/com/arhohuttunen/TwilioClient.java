@@ -21,6 +21,7 @@ public class TwilioClient {
                 .bodyValue(request)
                 .retrieve()
                 .bodyToMono(TwilioMessageResponse.class)
-                .blockOptional();
+                .blockOptional()
+                .orElseThrow();
     }
 }
