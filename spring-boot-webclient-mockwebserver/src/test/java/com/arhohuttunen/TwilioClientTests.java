@@ -16,7 +16,7 @@ import java.io.InputStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class TwilioClientTests {
+class TwilioClientTests {
     private final BasicJsonTester json = new BasicJsonTester(this.getClass());
     private MockWebServer mockWebServer;
     private TwilioClient twilioClient;

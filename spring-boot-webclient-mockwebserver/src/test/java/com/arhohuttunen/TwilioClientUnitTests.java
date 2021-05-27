@@ -12,7 +12,7 @@ import static org.mockito.Mockito.when;
 
 // This is an example of a bad unit test and should not be taken as an advice on how to test WebClient
 
-public class TwilioClientUnitTests {
+class TwilioClientUnitTests {
     private WebClient.RequestBodyUriSpec requestBodyUriMock;
     private WebClient.RequestHeadersSpec requestHeadersMock;
     private WebClient.RequestBodySpec requestBodyMock;

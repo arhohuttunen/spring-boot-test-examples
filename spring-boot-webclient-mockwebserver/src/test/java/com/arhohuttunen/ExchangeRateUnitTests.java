@@ -15,7 +15,7 @@ import static org.mockito.Mockito.when;
 
 // This is an example of a bad unit test and should not be taken as an advice on how to test WebClient
 
-public class ExchangeRateUnitTests {
+class ExchangeRateUnitTests {
     private WebClient.RequestHeadersUriSpec requestHeadersUriMock;
     private WebClient.RequestBodySpec requestBodyMock;
     private WebClient.ResponseSpec responseMock;
