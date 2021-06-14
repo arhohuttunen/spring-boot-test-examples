@@ -1,0 +1,3 @@
+exchange-rate-api:
+  base-url: https://v6.exchangerate-api.com/v6/
+  api-key: random-api-key
