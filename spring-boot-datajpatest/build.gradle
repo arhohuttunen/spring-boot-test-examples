@@ -18,10 +18,6 @@ repositories {
     mavenCentral()
 }
 
-ext {
-    set('testcontainersVersion', "1.15.2")
-}
-
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
@@ -38,7 +34,7 @@ dependencies {
 
 dependencyManagement {
     imports {
-        mavenBom "org.testcontainers:testcontainers-bom:${testcontainersVersion}"
+        mavenBom "org.testcontainers:testcontainers-bom:1.17.1"
     }
 }
 
