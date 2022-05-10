@@ -8,18 +8,20 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import org.springframework.boot.jackson.JsonComponent;
-import org.springframework.context.i18n.LocaleContextHolder;
 
 import javax.money.MonetaryAmount;
 import javax.money.format.MonetaryAmountFormat;
 import javax.money.format.MonetaryFormats;
 import java.io.IOException;
+import java.util.Locale;
 
 @JsonComponent
 public class MoneySerialization {
 
-    private static MonetaryAmountFormat monetaryAmountFormat() {
-        return MonetaryFormats.getAmountFormat(LocaleContextHolder.getLocale());
+    static MonetaryAmountFormat monetaryAmountFormat;
+
+    static {
+        monetaryAmountFormat = MonetaryFormats.getAmountFormat(Locale.US);
     }
 
     static class MonetaryAmountSerializer extends StdSerializer<MonetaryAmount> {
@@ -34,7 +36,7 @@ public class MoneySerialization {
                 JsonGenerator generator,
                 SerializerProvider provider) throws IOException {
 
-            generator.writeString(monetaryAmountFormat().format(value));
+            generator.writeString(monetaryAmountFormat.format(value));
         }
     }
 
@@ -51,7 +53,7 @@ public class MoneySerialization {
 
             JsonNode node = parser.getCodec().readTree(parser);
             String text = node.asText();
-            return monetaryAmountFormat().parse(text);
+            return monetaryAmountFormat.parse(text);
         }
     }
 }

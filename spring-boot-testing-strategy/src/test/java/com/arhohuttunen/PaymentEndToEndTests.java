@@ -1,5 +1,9 @@
 package com.arhohuttunen;
 
+import com.arhohuttunen.order.Order;
+import com.arhohuttunen.order.OrderRepository;
+import com.arhohuttunen.payment.Payment;
+import com.arhohuttunen.payment.PaymentRepository;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import org.junit.jupiter.api.AfterEach;
@@ -18,7 +22,6 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@DefaultLocale(language = "en", country = "US")
 class PaymentEndToEndTests {
     @Autowired
     private WebTestClient webClient;
