@@ -14,6 +14,7 @@ import javax.money.MonetaryAmount;
 import javax.money.format.MonetaryAmountFormat;
 import javax.money.format.MonetaryFormats;
 import java.io.IOException;
+import java.util.Locale;
 
 @JsonComponent
 public class MoneySerialization {
@@ -21,7 +22,7 @@ public class MoneySerialization {
     private static final MonetaryAmountFormat monetaryAmountFormat;
 
     static {
-        monetaryAmountFormat = MonetaryFormats.getAmountFormat(LocaleContextHolder.getLocale());
+        monetaryAmountFormat = MonetaryFormats.getAmountFormat(Locale.US);
     }
 
     static class MonetaryAmountSerializer extends StdSerializer<MonetaryAmount> {
