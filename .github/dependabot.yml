@@ -4,3 +4,11 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
+  - package-ecosystem: "gradle"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    target-branch: "spring-boot-2.x"
+    ignore:
+      - dependency-name: "org.springframework.boot"
+        update-types: ["version-update:semver-major"]
