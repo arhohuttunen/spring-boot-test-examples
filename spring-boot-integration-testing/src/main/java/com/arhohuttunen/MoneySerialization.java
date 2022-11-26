@@ -8,7 +8,6 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import org.springframework.boot.jackson.JsonComponent;
-import org.springframework.context.i18n.LocaleContextHolder;
 
 import javax.money.MonetaryAmount;
 import javax.money.format.MonetaryAmountFormat;
