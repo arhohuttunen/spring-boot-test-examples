@@ -1,8 +1,5 @@
 package com.arhohuttunen.exchange;
 
-import com.arhohuttunen.exchange.ExchangeClientProperties;
-import com.arhohuttunen.exchange.ExchangeFailure;
-import com.arhohuttunen.exchange.ExchangeRateClient;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;

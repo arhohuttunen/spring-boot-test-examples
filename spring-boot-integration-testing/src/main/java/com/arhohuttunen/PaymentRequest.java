@@ -1,11 +1,10 @@
 package com.arhohuttunen;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.CreditCardNumber;
-
-import javax.validation.constraints.NotNull;
 
 @Data
 @NoArgsConstructor

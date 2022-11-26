@@ -1,10 +1,10 @@
 package com.arhohuttunen;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.money.MonetaryAmount;
-import javax.validation.constraints.NotNull;
 
 @Data
 @NoArgsConstructor
