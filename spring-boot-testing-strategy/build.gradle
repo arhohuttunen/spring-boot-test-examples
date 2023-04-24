@@ -34,7 +34,7 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.testcontainers:junit-jupiter'
     testImplementation 'org.testcontainers:postgresql'
-    testRuntimeOnly 'com.squareup.okhttp3:okhttp:4.10.0'
+    testRuntimeOnly 'com.squareup.okhttp3:okhttp:4.11.0'
 }
 
 dependencyManagement {
