@@ -69,7 +69,7 @@ class CustomerControllerTests {
 
     @Test
     @WithMockUser
-    void cannotCreateCustomerIfNotAnAdmin() throws Exception {
+    void cannotCreateCustomerIfNotAnAdmin() {
         webClient.mutateWith(csrf())
                 .post().uri("/customer")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -90,7 +90,7 @@ class CustomerControllerTests {
     }
 
     @Test
-    void cannotDeleteCustomerIfNotAuthorized() throws Exception {
+    void cannotDeleteCustomerIfNotAuthorized() {
         webClient.mutateWith(csrf())
                 .delete().uri("/customer/{id}", 1)
                 .exchange()
@@ -98,7 +98,7 @@ class CustomerControllerTests {
     }
 
     @Test
-    void cannotDeleteCustomerIfNotAdmin() throws Exception {
+    void cannotDeleteCustomerIfNotAdmin() {
         webClient.mutateWith(csrf())
                 .mutateWith(mockUser())
                 .delete().uri("/customer/{id}", 1)
