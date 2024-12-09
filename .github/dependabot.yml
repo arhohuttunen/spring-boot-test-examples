@@ -9,6 +9,7 @@ updates:
         update-types:
           - "minor"
           - "patch"
+
   - package-ecosystem: "gradle"
     directory: "/"
     schedule:
@@ -22,3 +23,8 @@ updates:
     ignore:
       - dependency-name: "org.springframework.boot"
         update-types: ["version-update:semver-major"]
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
