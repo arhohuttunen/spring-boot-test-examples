@@ -1,21 +1,20 @@
 package com.arhohuttunen;
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.SerializerProvider;
-import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
-import com.fasterxml.jackson.databind.ser.std.StdSerializer;
-import org.springframework.boot.jackson.JsonComponent;
+import org.springframework.boot.jackson.JacksonComponent;
+import tools.jackson.core.JsonGenerator;
+import tools.jackson.core.JsonParser;
+import tools.jackson.databind.DeserializationContext;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.SerializationContext;
+import tools.jackson.databind.deser.std.StdDeserializer;
+import tools.jackson.databind.ser.std.StdSerializer;
 
 import javax.money.MonetaryAmount;
 import javax.money.format.MonetaryAmountFormat;
 import javax.money.format.MonetaryFormats;
-import java.io.IOException;
 import java.util.Locale;
 
-@JsonComponent
+@JacksonComponent
 public class MoneySerialization {
 
     private static final MonetaryAmountFormat monetaryAmountFormat;
@@ -34,7 +33,7 @@ public class MoneySerialization {
         public void serialize(
                 MonetaryAmount value,
                 JsonGenerator generator,
-                SerializerProvider provider) throws IOException {
+                SerializationContext context) {
 
             generator.writeString(monetaryAmountFormat.format(value));
         }
@@ -49,10 +48,10 @@ public class MoneySerialization {
         @Override
         public MonetaryAmount deserialize(
                 JsonParser parser,
-                DeserializationContext context) throws IOException {
+                DeserializationContext context) {
 
-            JsonNode node = parser.getCodec().readTree(parser);
-            String text = node.asText();
+            JsonNode node = parser.readValueAsTree();
+            String text = node.asString();
             return monetaryAmountFormat.parse(text);
         }
     }

@@ -4,9 +4,11 @@ import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
@@ -21,8 +23,8 @@ import java.time.LocalDateTime;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 class ServerIntegrationTests {
-    @Autowired
-    private WebTestClient webClient;
+    @LocalServerPort
+    private int port;
 
     @Autowired
     private OrderRepository orderRepository;
@@ -31,6 +33,7 @@ class ServerIntegrationTests {
     private PaymentRepository paymentRepository;
 
     private static MockWebServer mockWebServer;
+    private WebTestClient webClient;
 
     @DynamicPropertySource
     static void registerProperties(DynamicPropertyRegistry registry) {
@@ -41,6 +44,13 @@ class ServerIntegrationTests {
     static void setupMockWebServer() throws IOException {
         mockWebServer = new MockWebServer();
         mockWebServer.start();
+    }
+
+    @BeforeEach
+    void setUp() {
+        this.webClient = WebTestClient.bindToServer()
+                .baseUrl("http://localhost:" + port)
+                .build();
     }
 
     @AfterEach

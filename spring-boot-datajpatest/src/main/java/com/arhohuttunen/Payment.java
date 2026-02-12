@@ -1,5 +1,6 @@
 package com.arhohuttunen;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -24,9 +25,10 @@ public class Payment {
     @Id
     @GeneratedValue
     private Long id;
-    @OneToOne
+    @OneToOne(optional = false)
     @NonNull
     private Order order;
     @NonNull
+    @Column(nullable = false)
     private String creditCardNumber;
 }

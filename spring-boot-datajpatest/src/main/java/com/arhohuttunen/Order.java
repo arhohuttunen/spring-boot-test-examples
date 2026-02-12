@@ -1,5 +1,6 @@
 package com.arhohuttunen;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -22,10 +23,13 @@ public class Order {
     @GeneratedValue
     private Long id;
     @NonNull
+    @Column(nullable = false)
     private LocalDateTime date;
     @NonNull
+    @Column(nullable = false)
     private BigDecimal amount;
     @NonNull
+    @Column(nullable = false)
     private Boolean paid;
 
     public boolean isPaid() {
