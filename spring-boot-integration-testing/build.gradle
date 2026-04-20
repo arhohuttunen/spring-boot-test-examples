@@ -49,7 +49,7 @@ dependencies {
 
 dependencyManagement {
     imports {
-        mavenBom "org.testcontainers:testcontainers-bom:2.0.4"
+        mavenBom "org.testcontainers:testcontainers-bom:2.0.5"
     }
 }
 
